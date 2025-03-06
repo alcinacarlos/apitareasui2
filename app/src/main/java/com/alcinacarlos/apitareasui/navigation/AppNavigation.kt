@@ -9,21 +9,21 @@ import com.alcinacarlos.apitareasui.ui.viewmodel.AuthViewModel
 import com.alcinacarlos.apitareasui.ui.view.LoginScreen
 import com.alcinacarlos.apitareasui.ui.view.RegisterScreen
 import com.alcinacarlos.apitareasui.ui.view.TasksScreen
+import com.alcinacarlos.apitareasui.ui.view.WelcomeScreen
 import com.alcinacarlos.apitareasui.ui.viewmodel.TaskViewModel
 
 @Composable
 fun AppNavigation(navController: NavHostController, authViewModel: AuthViewModel, taskViewModel: TaskViewModel) {
 
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "welcome") {
+        composable("welcome") {
+            WelcomeScreen(navController)
+        }
         composable("login") {
-            LoginScreen(authViewModel, navController) {
-                navController.navigate("tareas")
-            }
+            LoginScreen(authViewModel, navController)
         }
         composable("register") {
-            RegisterScreen(authViewModel, navController) {
-                navController.navigate("login")
-            }
+            RegisterScreen(authViewModel, navController)
         }
         composable("tareas") {
             TasksScreen(taskViewModel)

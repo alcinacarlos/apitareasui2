@@ -1,6 +1,7 @@
 package com.alcinacarlos.apitareasui.ui.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -10,6 +11,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -22,7 +24,7 @@ import com.alcinacarlos.apitareasui.dto.UsuarioRegisterDTO
 import com.alcinacarlos.apitareasui.ui.viewmodel.AuthViewModel
 
 @Composable
-fun RegisterScreen(viewModel: AuthViewModel = viewModel(), navController: NavController, onRegisterSuccess: () -> Unit) {
+fun RegisterScreen(viewModel: AuthViewModel = viewModel(), navController: NavController) {
     var username by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -32,9 +34,33 @@ fun RegisterScreen(viewModel: AuthViewModel = viewModel(), navController: NavCon
     var municipio by remember { mutableStateOf("") }
     var provincia by remember { mutableStateOf("") }
     var cp by remember { mutableStateOf("") }
-
     val loading by viewModel.loading.collectAsState()
     val registerError by viewModel.error.collectAsState()
+    val registrationSuccess by viewModel.registrationSuccess.collectAsState()
+    var showDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(registrationSuccess) {
+        if (registrationSuccess) {
+            showDialog = true
+        }
+    }
+    if (showDialog) {
+        AlertDialog(
+            onDismissRequest = { showDialog = false },
+            title = { Text("Registro Exitoso") },
+            text = { Text("Te has registrado con éxito. Puedes iniciar sesión ahora") },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDialog = false
+                        navController.navigate("login")
+                    }
+                ) {
+                    Text("Aceptar")
+                }
+            }
+        )
+    }
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF3F4F6)), contentAlignment = Alignment.Center) {
         Card(
@@ -76,16 +102,20 @@ fun RegisterScreen(viewModel: AuthViewModel = viewModel(), navController: NavCon
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-                ClickableText(
-                    text = AnnotatedString("¿Ya tienes cuenta? Inicia sesión"),
-                    onClick = { navController.navigate("login") },
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    style = androidx.compose.ui.text.TextStyle(color = Color(0xFF3F51B5))
+                Text(
+                    text = "Ya tienes cuenta? Inicia sesión",
+                    modifier = Modifier
+                        .clickable { navController.navigate("login") }
+                        .align(Alignment.CenterHorizontally),
+                    style = TextStyle(color = Color(0xFF3F51B5))
                 )
+
             }
         }
     }
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,6 +1,7 @@
 package com.alcinacarlos.apitareasui.ui.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
@@ -20,8 +21,10 @@ import androidx.navigation.NavController
 import com.alcinacarlos.apitareasui.ui.viewmodel.AuthViewModel
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.ui.text.TextStyle
+
 @Composable
-fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavController, onLoginSuccess: () -> Unit) {
+fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val token by viewModel.token.collectAsState()
@@ -29,7 +32,7 @@ fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavContro
     val error by viewModel.error.collectAsState()
 
     LaunchedEffect(token) {
-        if (token.isNotBlank()) onLoginSuccess()
+        if (token.isNotBlank()) navController.navigate("tareas")
     }
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF3F4F6)), contentAlignment = Alignment.Center) {
@@ -62,12 +65,14 @@ fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavContro
                 }
                 Spacer(modifier = Modifier.height(16.dp))
 
-                ClickableText(
-                    text = AnnotatedString("¿No tienes cuenta? Regístrate"),
-                    onClick = { navController.navigate("register") },
-                    modifier = Modifier.align(Alignment.CenterHorizontally),
-                    style = androidx.compose.ui.text.TextStyle(color = Color(0xFF3F51B5))
+                Text(
+                    text = "No tienes cuenta? Regístrate",
+                    modifier = Modifier
+                        .clickable { navController.navigate("register") }
+                        .align(Alignment.CenterHorizontally),
+                    style = TextStyle(color = Color(0xFF3F51B5))
                 )
+
             }
         }
     }

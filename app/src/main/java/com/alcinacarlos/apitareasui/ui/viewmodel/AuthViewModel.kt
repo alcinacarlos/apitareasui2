@@ -20,6 +20,9 @@ class AuthViewModel() : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> get() = _error
 
+    private val _registrationSuccess = MutableStateFlow(false)
+    val registrationSuccess: StateFlow<Boolean> get() = _registrationSuccess
+
     private val api = RetrofitInstance.getInstance()
 
     fun login(username: String, password: String) {
@@ -48,16 +51,20 @@ class AuthViewModel() : ViewModel() {
             _error.value = null
             try {
                 val response = api.register(user)
-                if (!response.isSuccessful) {
+                if (response.isSuccessful) {
+                    _registrationSuccess.value = true
+                    _loading.value = false
+
+                } else {
                     val errorBody = response.errorBody()?.string()
                     val errorMessage = parseApiError(errorBody)
                     _error.value = errorMessage
+                    _loading.value = false
                 }
             } catch (e: Exception) {
-                println(e)
                 _error.value = "Error de conexión"
+                _loading.value = false
             }
-            _loading.value = false
         }
     }
 

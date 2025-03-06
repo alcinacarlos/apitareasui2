@@ -26,7 +26,7 @@ fun AppNavigation(navController: NavHostController, authViewModel: AuthViewModel
             }
         }
         composable("tareas") {
-            TasksScreen(taskViewModel, navController)
+            TasksScreen(taskViewModel)
         }
     }
 }

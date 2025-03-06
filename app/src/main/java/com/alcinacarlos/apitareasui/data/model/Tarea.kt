@@ -1,6 +1,5 @@
 package com.alcinacarlos.apitareasui.data.model
 
-import java.time.LocalDate
 
 data class Tarea(
     val _id: String?,

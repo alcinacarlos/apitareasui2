@@ -33,12 +33,9 @@ class MainActivity : ComponentActivity() {
 fun MainApp() {
     val navController = rememberNavController()
     val authViewModel = AuthViewModel()
-    val tareaViewModel = TaskViewModel()
+    val tareaViewModel = TaskViewModel(authViewModel)
 
-    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-        Box(Modifier.padding(innerPadding)) {
-            AppNavigation(navController, authViewModel, tareaViewModel)
-        }
-    }
+    AppNavigation(navController, authViewModel, tareaViewModel)
+
 }
 

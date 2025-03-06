@@ -21,6 +21,9 @@ class TaskViewModel(authViewModel: AuthViewModel) : ViewModel() {
     private val _errorDialog = MutableStateFlow<String?>(null)
     val errorDialog: StateFlow<String?> get() = _errorDialog
 
+    private val _registersucessful = MutableStateFlow(false)
+    val registersucessful: StateFlow<Boolean> get() = _registersucessful
+
     private var api = RetrofitInstance.getInstance()
 
     private val _tareas = MutableStateFlow<List<Tarea>>(emptyList())
@@ -67,7 +70,10 @@ class TaskViewModel(authViewModel: AuthViewModel) : ViewModel() {
             }
         }
     }
-
+    fun afterCreateTask() {
+        _registersucessful.value = false
+        _errorDialog.value = null
+    }
     fun crearTarea(titulo: String, descripcion: String, usuarioid: String) {
         viewModelScope.launch {
             try {
@@ -81,10 +87,13 @@ class TaskViewModel(authViewModel: AuthViewModel) : ViewModel() {
                 if (response.isSuccessful) {
                     _tareas.value += response.body()!!
                     _errorDialog.value = null
+                    _registersucessful.value = true
                 } else {
+                    _registersucessful.value = false
                     _errorDialog.value = "No puedes asignar una tarea a otro usuario"
                 }
             } catch (e: Exception) {
+                _registersucessful.value = false
                 _errorDialog.value = "Error de conexión"
             }
         }

@@ -34,10 +34,10 @@ fun WelcomeScreen(navController: NavController) {
                 modifier = Modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("¡Bienvenido a la App de Notas!", fontSize = 24.sp, color = Color(0xFF3F51B5))
+                Text("¡Bienvenido a la App de Tareas!", fontSize = 24.sp, color = Color(0xFF3F51B5))
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text("¡Tu espacio para organizar tus ideas y tareas!", fontSize = 16.sp, color = Color.Gray)
+                Text("¡Tu espacio para organizar tus tareas!", fontSize = 16.sp, color = Color.Gray)
 
                 Spacer(modifier = Modifier.height(32.dp))
 

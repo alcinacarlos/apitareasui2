@@ -170,10 +170,12 @@ fun AddTaskDialog(onDismiss: () -> Unit, viewModel: TaskViewModel) {
     var usuarioError by remember { mutableStateOf(false) }
 
     val errorDiag by viewModel.errorDialog.collectAsState()
+    val registersucessful by viewModel.registersucessful.collectAsState()
     var shouldDismiss by remember { mutableStateOf(false) }
 
-    LaunchedEffect(errorDiag) {
-        if (errorDiag.isNullOrBlank() && shouldDismiss) {
+    LaunchedEffect(registersucessful) {
+        if (registersucessful) {
+            viewModel.afterCreateTask()
             onDismiss()
         }
     }
@@ -239,10 +241,7 @@ fun AddTaskDialog(onDismiss: () -> Unit, viewModel: TaskViewModel) {
 
                     if (esValido) {
                         viewModel.crearTarea(titulo, descripcion, usuario)
-                        if (errorDiag.isNullOrBlank()) {
-                            shouldDismiss = true
-                        }
-
+                        shouldDismiss = true
                     } else {
                         tituloError = titulo.isBlank()
                         descripcionError = descripcion.isBlank()

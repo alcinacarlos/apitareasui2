@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,7 +18,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.alcinacarlos.apitareasui.ui.viewmodel.AuthViewModel
-
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 @Composable
 fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavController, onLoginSuccess: () -> Unit) {
     var username by remember { mutableStateOf("") }
@@ -27,7 +29,7 @@ fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavContro
     val error by viewModel.error.collectAsState()
 
     LaunchedEffect(token) {
-        if (token != null) onLoginSuccess()
+        if (token.isNotBlank()) onLoginSuccess()
     }
 
     Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF3F4F6)), contentAlignment = Alignment.Center) {
@@ -44,8 +46,8 @@ fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavContro
                 Text("Iniciar Sesión", fontSize = 24.sp, color = Color(0xFF3F51B5))
                 Spacer(modifier = Modifier.height(24.dp))
 
-                CampoLogin(value = username, label = "Usuario", onValueChange = { username = it })
-                CampoLogin(value = password, label = "Contraseña", onValueChange = { password = it }, isPassword = true)
+                CampoUsuario(value = username, label = "Usuario", onValueChange = { username = it })
+                CampoContrasenia(value = password, label = "Contraseña", onValueChange = { password = it })
 
                 Spacer(modifier = Modifier.height(16.dp))
                 if (loading) CircularProgressIndicator()
@@ -70,10 +72,11 @@ fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavContro
         }
     }
 }
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CampoLogin(value: String, label: String, onValueChange: (String) -> Unit, isPassword: Boolean = false) {
+fun CampoContrasenia(value: String, label: String, onValueChange: (String) -> Unit) {
+    var passwordVisible by remember { mutableStateOf(false) }
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
@@ -85,6 +88,29 @@ fun CampoLogin(value: String, label: String, onValueChange: (String) -> Unit, is
             focusedBorderColor = Color(0xFF3F51B5),
             cursorColor = Color(0xFF3F51B5)
         ),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        trailingIcon = {
+            val image = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+            IconButton(onClick = { passwordVisible = !passwordVisible }) {
+                Icon(imageVector = image, contentDescription = if (passwordVisible) "Hide password" else "Show password")
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CampoUsuario(value: String, label: String, onValueChange: (String) -> Unit) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        label = { Text(label) },
+        modifier = Modifier.fillMaxWidth(),
+        singleLine = true,
+        shape = RoundedCornerShape(8.dp),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = Color(0xFF3F51B5),
+            cursorColor = Color(0xFF3F51B5)
+        )
     )
 }

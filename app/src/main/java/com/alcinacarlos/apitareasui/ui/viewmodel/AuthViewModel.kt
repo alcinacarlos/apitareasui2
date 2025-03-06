@@ -3,18 +3,18 @@ package com.alcinacarlos.apitareasui.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alcinacarlos.apitareasui.data.model.ApiError
+import com.alcinacarlos.apitareasui.data.remote.ApiService
 import com.alcinacarlos.apitareasui.dto.LoginUsuarioDTO
 import com.alcinacarlos.apitareasui.dto.UsuarioRegisterDTO
-import com.alcinacarlos.apitareasui.data.remote.ApiService
+import com.alcinacarlos.apitareasui.data.remote.RetrofitInstance
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class AuthViewModel(private val api: ApiService) : ViewModel() {
-
-    private val _token = MutableStateFlow<String?>(null)
-    val token: StateFlow<String?> get() = _token
+class AuthViewModel() : ViewModel() {
+    private val _token = MutableStateFlow("")
+    val token: StateFlow<String> get() = _token
 
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> get() = _loading
@@ -22,33 +22,27 @@ class AuthViewModel(private val api: ApiService) : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> get() = _error
 
+    private val api = RetrofitInstance.getInstance()
+
     fun login(username: String, password: String) {
         viewModelScope.launch {
             _loading.value = true
             _error.value = null
             try {
                 val response = api.login(LoginUsuarioDTO(username, password))
-                _token.value = response.token
+                if (!response.isSuccessful) {
+                    _error.value = "Contraseña y/o usuario incorrecto"
+                }else{
+                    RetrofitInstance.changeToken(response.body()?.token)
+                }
             } catch (e: Exception) {
-                _error.value = "Error de autenticación"
+                _error.value = "Error de conexión"
             }
             _loading.value = false
         }
+
     }
 
-    fun test(user: UsuarioRegisterDTO) {
-        viewModelScope.launch {
-            _loading.value = true
-            _error.value = null
-            try {
-                api.register(user)
-            } catch (e: Exception) {
-                println(e)
-                _error.value = "${e.message}"
-            }
-            _loading.value = false
-        }
-    }
     fun register(user: UsuarioRegisterDTO) {
         viewModelScope.launch {
             _loading.value = true
@@ -73,11 +67,7 @@ class AuthViewModel(private val api: ApiService) : ViewModel() {
     fun parseApiError(errorBody: String?): String {
         return try {
             val apiError = Gson().fromJson(errorBody, ApiError::class.java)
-            val fullMessage = apiError?.message ?: "Error desconocido"
-
-            // Dividir el mensaje después del primer punto y tomar solo la segunda parte
-            val splitMessage = fullMessage.split(".", limit = 2)
-            if (splitMessage.size > 1) splitMessage[1].trim() else fullMessage
+            apiError?.message ?: "Error desconocido"
         } catch (e: Exception) {
             "Error al procesar la respuesta del servidor"
         }

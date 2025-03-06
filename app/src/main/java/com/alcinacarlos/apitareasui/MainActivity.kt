@@ -14,6 +14,7 @@ import com.alcinacarlos.apitareasui.navigation.AppNavigation
 import com.alcinacarlos.apitareasui.ui.theme.ApitareasuiTheme
 import com.alcinacarlos.apitareasui.ui.viewmodel.AuthViewModel
 import com.alcinacarlos.apitareasui.data.remote.RetrofitInstance
+import com.alcinacarlos.apitareasui.ui.viewmodel.TaskViewModel
 
 
 class MainActivity : ComponentActivity() {
@@ -31,11 +32,12 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainApp() {
     val navController = rememberNavController()
-    val authViewModel = AuthViewModel(api = RetrofitInstance.api)
+    val authViewModel = AuthViewModel()
+    val tareaViewModel = TaskViewModel()
 
     Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
         Box(Modifier.padding(innerPadding)) {
-            AppNavigation(navController, authViewModel)
+            AppNavigation(navController, authViewModel, tareaViewModel)
         }
     }
 }

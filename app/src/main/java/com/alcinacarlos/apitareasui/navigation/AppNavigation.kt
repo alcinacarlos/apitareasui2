@@ -8,21 +8,25 @@ import androidx.navigation.compose.composable
 import com.alcinacarlos.apitareasui.ui.viewmodel.AuthViewModel
 import com.alcinacarlos.apitareasui.ui.view.LoginScreen
 import com.alcinacarlos.apitareasui.ui.view.RegisterScreen
+import com.alcinacarlos.apitareasui.ui.view.TasksScreen
+import com.alcinacarlos.apitareasui.ui.viewmodel.TaskViewModel
 
 @Composable
-fun AppNavigation(navController: NavHostController, authViewModel: AuthViewModel) {
-    val token = authViewModel.token.collectAsState().value
+fun AppNavigation(navController: NavHostController, authViewModel: AuthViewModel, taskViewModel: TaskViewModel) {
 
-    NavHost(navController = navController, startDestination = if (token == null) "login" else "taskList") {
+    NavHost(navController = navController, startDestination = "login") {
         composable("login") {
-            LoginScreen(viewModel = authViewModel, navController) {
-                navController.navigate("taskList") { popUpTo("login") { inclusive = true } }
+            LoginScreen(authViewModel, navController) {
+                navController.navigate("tareas")
             }
         }
         composable("register") {
-            RegisterScreen(viewModel = authViewModel, navController) {
+            RegisterScreen(authViewModel, navController) {
                 navController.navigate("login")
             }
+        }
+        composable("tareas") {
+            TasksScreen(taskViewModel, navController)
         }
     }
 }

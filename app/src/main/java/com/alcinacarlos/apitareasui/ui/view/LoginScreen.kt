@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,8 +22,14 @@ import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.ui.text.TextStyle
 
+/**
+ * Pantalla de inicio de sesión.
+ *
+ * @param viewModel ViewModel de autenticación.
+ * @param navController Controlador de navegación.
+ */
 @Composable
-fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavController) {
+fun LoginScreen(viewModel: AuthViewModel, navController: NavController) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     val token by viewModel.token.collectAsState()
@@ -35,7 +40,10 @@ fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavContro
         if (token.isNotBlank()) navController.navigate("tareas")
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF3F4F6)), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier.fillMaxSize().background(Color(0xFFF3F4F6)),
+        contentAlignment = Alignment.Center
+    ) {
         Card(
             modifier = Modifier.padding(24.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -72,11 +80,18 @@ fun LoginScreen(viewModel: AuthViewModel = viewModel(), navController: NavContro
                         .align(Alignment.CenterHorizontally),
                     style = TextStyle(color = Color(0xFF3F51B5))
                 )
-
             }
         }
     }
 }
+
+/**
+ * Campo de entrada de contraseña con visibilidad alternable.
+ *
+ * @param value Valor actual de la contraseña.
+ * @param label Etiqueta del campo.
+ * @param onValueChange Función que se ejecuta cuando cambia el valor.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CampoContrasenia(value: String, label: String, onValueChange: (String) -> Unit) {
@@ -103,6 +118,13 @@ fun CampoContrasenia(value: String, label: String, onValueChange: (String) -> Un
     )
 }
 
+/**
+ * Campo de entrada de texto para el usuario.
+ *
+ * @param value Valor actual del campo.
+ * @param label Etiqueta del campo.
+ * @param onValueChange Función que se ejecuta cuando cambia el valor.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CampoUsuario(value: String, label: String, onValueChange: (String) -> Unit) {

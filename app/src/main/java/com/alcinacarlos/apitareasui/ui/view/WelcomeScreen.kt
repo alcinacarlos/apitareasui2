@@ -1,4 +1,5 @@
 package com.alcinacarlos.apitareasui.ui.view
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,9 +22,22 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 
+/**
+ * Pantalla de bienvenida de la aplicación.
+ *
+ * Muestra un mensaje de bienvenida y ofrece opciones para navegar
+ * a la pantalla de registro o de inicio de sesión.
+ *
+ * @param navController Controlador de navegación utilizado para moverse entre pantallas.
+ */
 @Composable
 fun WelcomeScreen(navController: NavController) {
-    Box(modifier = Modifier.fillMaxSize().background(Color(0xFFF3F4F6)), contentAlignment = Alignment.Center) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF3F4F6)),
+        contentAlignment = Alignment.Center
+    ) {
         Card(
             modifier = Modifier.padding(24.dp),
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
@@ -34,10 +48,18 @@ fun WelcomeScreen(navController: NavController) {
                 modifier = Modifier.padding(24.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("¡Bienvenido a la App de Tareas!", fontSize = 24.sp, color = Color(0xFF3F51B5))
+                Text(
+                    text = "¡Bienvenido a la App de Tareas!",
+                    fontSize = 24.sp,
+                    color = Color(0xFF3F51B5)
+                )
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text("¡Tu espacio para organizar tus tareas!", fontSize = 16.sp, color = Color.Gray)
+                Text(
+                    text = "¡Tu espacio para organizar tus tareas!",
+                    fontSize = 16.sp,
+                    color = Color.Gray
+                )
 
                 Spacer(modifier = Modifier.height(32.dp))
 
